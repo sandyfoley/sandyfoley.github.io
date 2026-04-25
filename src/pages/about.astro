@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About"
+  description="About Sandy Foley and the practical AI focus behind So you wanna... with AI."
+>
+  <section class="container about">
+    <p class="eyebrow">About</p>
+    <h1>The next chapter of practical technical blogging</h1>
+    <div class="copy">
+      <p>
+        I previously blogged about Sitecore and Solr, with a focus on the practical details that
+        matter when teams are building and maintaining real platforms.
+      </p>
+      <p>
+        <strong>So you wanna... with AI</strong> continues that habit. The focus here is not AI hype
+        or model-building theory. It is a working notebook on applying AI to software delivery:
+        Codex workflows, prompt strategy, in-app browser usage, context management, and architecture
+        judgment for .NET teams.
+      </p>
+      <p>
+        The goal is to capture lessons that help experienced developers use AI as a serious tool
+        inside existing engineering constraints.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about {
+    padding: 5rem 0;
+  }
+
+  h1 {
+    max-width: 880px;
+    margin: 0;
+    font-size: clamp(2.4rem, 6vw, 4.6rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .copy {
+    max-width: 760px;
+    margin-top: 2rem;
+    color: #2f3a45;
+    font-size: 1.08rem;
+  }
+</style>
