@@ -1,0 +1,54 @@
+---
+import { getCollection } from 'astro:content';
+import PostCard from '../../components/PostCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf(),
+);
+---
+
+<BaseLayout
+  title="Blog"
+  description="Practical posts about Codex workflows, prompt strategy, context management, and AI-assisted delivery."
+>
+  <section class="container page-header">
+    <p class="eyebrow">Blog</p>
+    <h1>Practical AI notes for software delivery</h1>
+    <p>
+      Developer-focused writing on Codex workflows, architecture habits, content platforms, and
+      where AI helps when the work has real constraints.
+    </p>
+  </section>
+
+  <section class="container posts">
+    <div class="post-grid">
+      {posts.map((post) => <PostCard post={post} />)}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: 4.5rem 0 1.5rem;
+  }
+
+  h1 {
+    max-width: 820px;
+    margin: 0;
+    font-size: clamp(2.4rem, 6vw, 4.8rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .page-header p:last-child {
+    max-width: 760px;
+    margin: 1rem 0 0;
+    color: var(--muted);
+    font-size: 1.15rem;
+  }
+
+  .posts {
+    padding: 1rem 0 5rem;
+  }
+</style>
