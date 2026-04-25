@@ -36,7 +36,9 @@ It allows Codex to:
 - Enable the Browser plugin  
 - Ask Codex to use the browser, or reference it with `@Browser`
 - Highlight sections of the UI and add annotations
-- Prompt Codex to react to the comments  
+- Prompt Codex to react to the comments 
+
+>"*The in-app browser does not support authentication flows, signed-in pages, your regular >browser profile, cookies, extensions, or existing tabs. Use it for pages Codex can open >without logging in.*"
 
 
 ## Working scenario
