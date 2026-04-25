@@ -5,25 +5,25 @@ publishDate: 2026-04-24
 audience:
   - Prompt engineers
   - Developers
+  - GPT 5.5 / Medium
 tags:
-  - Codex
-  - AI workflows
-  - UI delivery
-  - Prompt strategy
-  - GPT 5.5
-  - In-app browser
+  - codex
+  - ai workflows
+  - ui delivery
+  - prompt strategy
+  - in-app browser
 draft: false
 ---
 
 In this post, I explore Codex's new in-app browser workflow and compare it to direct prompting.
 
-The question is simple: when is direct prompting enough, and when is it worth opening the in-app browser and annotating the screen?  I've done one apples-to-apples test.
+The question is simple: when is direct prompting enough, and when is it worth opening the in-app browser and annotating the screen?  I've done an apples-to-apples test.
 
 But, first of all ...
 
 ## What is the Codex in-app browser?
 
-The in-app browser lets Codex interact directly with your running local application.
+Introduced in mid-April, the in-app browser lets Codex interact directly with your running local application.
 
 It allows Codex to:
 - click, type, or navigate the UI  
@@ -34,13 +34,14 @@ It allows Codex to:
 
 ### TLDR; How to use it
 - Enable the Browser plugin  
-- Ask Codex to use the browser, or reference it with `@Browser`  
-
+- Ask Codex to use the browser, or reference it with `@Browser`
+- Highlight sections of the UI and add annotations
+- Prompt Codex to react to the comments  
 
 
 ## Working scenario
 
-I wanted to update an existing listing page's filtering capability.  It currently has simple sidebar links that filter the articles in groups of categories. The task is to convert that sidebar navigation into a faceted search experience.
+I wanted to update an existing listing page's filtering capability.  It currently has simple sidebar links that filter the articles in groups of categories. The user can filter the listing by one attribute at a time. The task is to convert that sidebar navigation into a faceted search experience.
 
 <figure>
   <img src="/images/blog/codex-prompting-vs-in-app-browser/before.png" alt="Before screenshot of the listing page with simple sidebar navigation links." />
@@ -67,22 +68,22 @@ The first is direct prompting in Codex. I describe the page, the current sidebar
 
 
 ```
-On the /articles page, please convert the sidebar nav to a faceted search.  
-Please allow for multiple selections within a group using 'OR' and inter-group using 'AND'
+On the /articles page, convert the sidebar nav to a faceted search.  
+Allow for multiple selections within a group using 'OR' and inter-group using 'AND'.
 
 Show the selected facets above the "Latest Articles" heading on the view. 
-Please show all selected facets here, not just the latest selected.
+Show all selected facets here, not just the latest selected and allow them to be removed.
 ```
 
 ### In-app browser annotations
-The second uses the in-app browser with annotations and comments. I open the page, point at the relevant areas, and use the visible screen as part of the instruction. Instead of describing every relationship verbally, I can show Codex where the change belongs.
-
-Both approaches work, but they have different tradeoffs.
+The second uses the in-app browser with annotations and comments. I open the page, point at the relevant areas, and use the visible screen as part of the instruction. Instead of describing every relationship in a prompt, I can show Codex where the change belongs.
 
 <figure class="figure-small">
   <img src="/images/blog/codex-prompting-vs-in-app-browser/annotations.png" alt="Screenshot showing annotations added in the Codex in-app browser to explain the intended UI changes." />
   <figcaption>Annotations: comments on the running page make placement and intent explicit.</figcaption>
 </figure>
+
+The annotations above were added to the two rectangular areas denoted below:
 
 <figure>
   <img src="/images/blog/codex-prompting-vs-in-app-browser/during.png" alt="Screenshot showing the UI change in progress during the in-app browser workflow." />
@@ -98,11 +99,11 @@ Both methods returned similar results and the facets correctly worked under both
   <figcaption>After: the page uses faceted search, with selected facets visible above the listing.</figcaption>
 </figure>
 
-### Verdict (for this scenario)
+### Verdict
 
-**Direct prompting** was faster. It uses less context but depends heavily on how clearly I describe the current UI and the desired placement. **Tokens: 114K.**
+For this scenario, **direct prompting** was faster. It uses less context but depends heavily on how clearly I describe the current UI and the desired placement. **Tokens: 114K.**
 
-The **in-app browser** approach took about 15 minutes longer in this test. Some of that time was used figuring out how to use the browser.  **Tokens: 191K**
+The **in-app browser** approach took about 10 minutes longer in this test, likely because it was processing unnecessary DOM. Also, some of that time was used figuring out how to use the browser.  **Tokens: 191K**
 
 The browser gives Codex more visual grounding. It has more information about the page as a user experiences it, including the relationship between the sidebar, main content, selected filters, and nearby sections.
 
@@ -135,22 +136,26 @@ That includes tasks where you find yourself saying things like:
 Those instructions are possible to write as text, but they are easy to under-specify. The browser helps because the page itself becomes part of the prompt.
 
 
+## My plan of action
 
-## My plans going forward
 
-
-| Situation                                      | Prompt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | In-app |
-| ---------------------------------------------- | ---------------- | --------------------------- |
-| Text changes                                   | ☑️&nbsp;&nbsp;&nbsp;                |                             |
-| Backend logic changes                          | ☑️                |                             |
-| Small isolated component updates               | ☑️                |                             |
-| Refactors with clear code boundaries           | ☑️                |                             |
-| Layout changes                                 |                  | ☑️                           |
-| Placement-sensitive UI work                    |                  | ☑️                           |
-| Multiple related on-screen regions             |                  | ☑️                           |
-| Visual hierarchy or "put this here" feedback   |                  | ☑️                           |
-
+| Situation                                      | Prompt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | In-app |
+| ---------------------------------------------- | ------ | ------ |
+| Text changes                                   | &nbsp;&nbsp;&nbsp;✓      |        |
+| Backend logic changes                          | &nbsp;&nbsp;&nbsp;✓      |        |
+| Small isolated component updates               | &nbsp;&nbsp;&nbsp;✓      |        |
+| Refactors with clear code boundaries           | &nbsp;&nbsp;&nbsp;✓      |        |
+| Layout changes                                 |        | &nbsp;&nbsp;&nbsp;✓      |
+| Placement-sensitive UI work                    |        | &nbsp;&nbsp;&nbsp;✓      |
+| Multiple related on-screen regions             |        | &nbsp;&nbsp;&nbsp;✓      |
+| Visual hierarchy or "put this here" feedback   |        | &nbsp;&nbsp;&nbsp;✓      |
 
 
 
 It boils down to: direct prompting is efficient when the work is easy to describe, and browser annotations are useful when the screen itself carries information the prompt otherwise has to recreate.
+
+### Assumptions
+
+You have a rock-solid AGENTS.md file with tested guardrails.
+
+Maybe that's my next blog post? Creating a iron-clad AGENTS.md file  (spoiler alert: it will never be complete)

@@ -1,17 +1,14 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
+import { formatDate } from '../utils/dates';
 
 interface Props {
   post: CollectionEntry<'blog'>;
 }
 
 const { post } = Astro.props;
-const date = post.data.publishDate.toLocaleDateString('en-US', {
-  month: 'long',
-  day: 'numeric',
-  year: 'numeric',
-});
+const date = formatDate(post.data.publishDate);
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description}>
@@ -46,7 +43,94 @@ const date = post.data.publishDate.toLocaleDateString('en-US', {
       <slot />
     </div>
   </article>
+  <dialog class="image-modal" aria-label="Expanded image preview">
+    <button class="image-modal-close" type="button" aria-label="Close image preview">
+      <span aria-hidden="true">×</span>
+    </button>
+    <button class="image-modal-nav image-modal-prev" type="button" aria-label="Show previous image">
+      <span aria-hidden="true">&lsaquo;</span>
+    </button>
+    <button class="image-modal-nav image-modal-next" type="button" aria-label="Show next image">
+      <span aria-hidden="true">&rsaquo;</span>
+    </button>
+    <div class="image-modal-frame">
+      <img alt="" />
+      <p class="image-modal-caption" aria-live="polite"></p>
+    </div>
+  </dialog>
 </BaseLayout>
+
+<script>
+  const modal = document.querySelector<HTMLDialogElement>('.image-modal');
+  const modalImage = modal?.querySelector<HTMLImageElement>('img');
+  const closeButton = modal?.querySelector<HTMLButtonElement>('.image-modal-close');
+  const previousButton = modal?.querySelector<HTMLButtonElement>('.image-modal-prev');
+  const nextButton = modal?.querySelector<HTMLButtonElement>('.image-modal-next');
+  const caption = modal?.querySelector<HTMLParagraphElement>('.image-modal-caption');
+  const postImages = Array.from(document.querySelectorAll<HTMLImageElement>('.content figure img'));
+  let activeImageIndex = 0;
+
+  const getImageCaption = (image: HTMLImageElement) => {
+    const figure = image.closest('figure');
+    return figure?.querySelector('figcaption')?.textContent?.trim() || image.alt;
+  };
+
+  const showImage = (index: number) => {
+    if (!modalImage || postImages.length === 0) return;
+
+    activeImageIndex = (index + postImages.length) % postImages.length;
+    const image = postImages[activeImageIndex];
+    if (!image) return;
+
+    modalImage.src = image.currentSrc || image.src;
+    modalImage.alt = image.alt;
+
+    if (caption) {
+      caption.textContent = `${activeImageIndex + 1} / ${postImages.length} · ${getImageCaption(image)}`;
+    }
+  };
+
+  const openImage = (index: number) => {
+    if (!modal) return;
+    showImage(index);
+    modal.showModal();
+    closeButton?.focus();
+  };
+
+  postImages.forEach((image, index) => {
+    image.tabIndex = 0;
+    image.role = 'button';
+    image.setAttribute('aria-label', `Open larger image: ${image.alt}`);
+
+    image.addEventListener('click', () => openImage(index));
+    image.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openImage(index);
+      }
+    });
+  });
+
+  closeButton?.addEventListener('click', () => modal?.close());
+  previousButton?.addEventListener('click', () => showImage(activeImageIndex - 1));
+  nextButton?.addEventListener('click', () => showImage(activeImageIndex + 1));
+  modal?.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      showImage(activeImageIndex - 1);
+    }
+
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      showImage(activeImageIndex + 1);
+    }
+  });
+  modal?.addEventListener('click', (event) => {
+    if (event.target === modal) {
+      modal.close();
+    }
+  });
+</script>
 
 <style>
   .post {
@@ -96,7 +180,7 @@ const date = post.data.publishDate.toLocaleDateString('en-US', {
     border-radius: 999px;
     background: rgba(37, 99, 111, 0.08);
     padding: 0.22rem 0.65rem;
-    color: var(--accent-strong);
+    color: var(--accent);
     font-size: 0.84rem;
     font-weight: 700;
   }
@@ -144,6 +228,7 @@ const date = post.data.publishDate.toLocaleDateString('en-US', {
     border: 1px solid var(--subtle);
     border-radius: 8px;
     box-shadow: var(--shadow);
+    cursor: zoom-in;
   }
 
   .content :global(.figure-small) {
@@ -158,5 +243,161 @@ const date = post.data.publishDate.toLocaleDateString('en-US', {
     margin-top: 0.65rem;
     color: var(--muted);
     font-size: 0.92rem;
+  }
+
+  .image-modal {
+    width: min(96vw, 1400px);
+    max-width: none;
+    max-height: 92vh;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    padding: 3rem 0 0;
+  }
+
+  .image-modal::backdrop {
+    background: rgba(10, 18, 24, 0.78);
+  }
+
+  .image-modal img {
+    display: block;
+    width: auto;
+    max-width: 96vw;
+    height: auto;
+    max-height: calc(92vh - 3.5rem);
+    margin-inline: auto;
+    border-radius: 8px;
+    background: var(--surface);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+  }
+
+  .image-modal-frame {
+    width: fit-content;
+    max-width: 96vw;
+    margin-inline: auto;
+  }
+
+  .image-modal-caption {
+    margin: 0.75rem 0 0;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 0.95rem;
+    text-align: center;
+  }
+
+  .image-modal-close {
+    position: absolute;
+    top: 0.2rem;
+    right: 0.2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 999px;
+    background: rgba(17, 24, 39, 0.72);
+    color: #ffffff;
+    cursor: pointer;
+    font: inherit;
+    font-size: 1.7rem;
+    line-height: 1;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(12px);
+    transition:
+      background 160ms ease,
+      border-color 160ms ease,
+      transform 160ms ease;
+  }
+
+  .image-modal-close:hover,
+  .image-modal-close:focus-visible {
+    border-color: rgba(255, 255, 255, 0.46);
+    background: rgba(17, 24, 39, 0.9);
+    transform: translateY(-1px);
+  }
+
+  .image-modal-close:focus-visible {
+    outline: 3px solid rgba(131, 197, 190, 0.8);
+    outline-offset: 3px;
+  }
+
+  .image-modal-close span {
+    display: block;
+    transform: translateY(-0.08em);
+  }
+
+  .image-modal-nav {
+    position: fixed;
+    top: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 999px;
+    background: rgba(17, 24, 39, 0.72);
+    color: #ffffff;
+    cursor: pointer;
+    font: inherit;
+    font-size: 1.7rem;
+    line-height: 1;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
+    transform: translateY(-50%);
+    backdrop-filter: blur(12px);
+    transition:
+      background 160ms ease,
+      border-color 160ms ease;
+  }
+
+  .image-modal-prev {
+    left: max(1rem, calc((100vw - 1400px) / 2 + 0.2rem));
+  }
+
+  .image-modal-next {
+    right: max(1rem, calc((100vw - 1400px) / 2 + 0.2rem));
+  }
+
+  .image-modal-nav:hover,
+  .image-modal-nav:focus-visible {
+    border-color: rgba(255, 255, 255, 0.46);
+    background: rgba(17, 24, 39, 0.9);
+  }
+
+  .image-modal-nav:focus-visible {
+    outline: 3px solid rgba(131, 197, 190, 0.8);
+    outline-offset: 3px;
+  }
+
+  .image-modal-nav span {
+    display: block;
+    transform: translateY(-0.08em);
+  }
+
+  @media (max-width: 720px) {
+    .image-modal {
+      padding-top: 3.4rem;
+    }
+
+    .image-modal-nav {
+      top: 50%;
+      bottom: auto;
+      width: 2.4rem;
+      height: 2.4rem;
+      font-size: 1.7rem;
+      transform: translateY(-50%);
+    }
+
+    .image-modal-prev {
+      left: 0.75rem;
+    }
+
+    .image-modal-next {
+      right: 0.75rem;
+    }
+
+    .image-modal-caption {
+      margin-bottom: 4rem;
+    }
   }
 </style>

@@ -1,6 +1,12 @@
+---
+import { getEasternYear } from '../utils/dates';
+
+const year = getEasternYear();
+---
+
 <footer class="site-footer">
   <div class="container footer-inner">
-    <p>&copy; {new Date().getFullYear()} Sandy Foley. Practical AI notes for software delivery.</p>
+    <p>&copy; {year} Sandy Foley. Practical AI notes for software delivery.</p>
     <a href="/blog/">Read the blog</a>
   </div>
 </footer>
