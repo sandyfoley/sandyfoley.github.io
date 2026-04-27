@@ -1,7 +1,7 @@
 ---
 title: "Prompting vs browser annotations in Codex"
 description: "So you wanna compare direct Codex prompting with the browser workflow?"
-image: /images/blog/codex-prompting-vs-in-app-browser/annotations.png
+image: https://sandyfoley.github.io/images/blog/codex-prompting-vs-in-app-browser/annotations.png
 publishDate: 2026-04-24
 audience:
   - Prompt engineers
