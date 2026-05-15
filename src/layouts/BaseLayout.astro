@@ -16,7 +16,6 @@ const {
 const pageTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const siteUrl = "https://sandyfoley.github.io";
-const imageUrl = siteUrl + image;
 ---
 
 <!doctype html>
@@ -33,7 +32,7 @@ const imageUrl = siteUrl + image;
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={imageUrl} />
+    <meta name="twitter:image" content="" />
     <title>{pageTitle}</title>
   </head>
   <body>
