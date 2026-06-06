@@ -13,15 +13,13 @@ tags:
 draft: false
 ---
 
-# Augmenting Our Own Intelligence
-
-If you spend enough time reading about artificial intelligence, you'd think we're headed toward one of two futures. In one version, AI replaces most jobs and fundamentally reshapes society. In the other, people reject it outright and push back against the technology. I suspect the future will be far less dramatic and far more interesting.
+If you spend enough time doom-scrolling the AI blurbs, it starts to feel like we’re being presented with two competing stories about where this is all headed. In one, AI disruption pushes society toward guaranteed income models where survival does not depend on traditional work. In the other, the emphasis stays on expanding entrepreneurship so quickly that entirely new categories of work are created faster than old ones can fade away. Both are trying to answer the same underlying question in different ways: what happens when intelligence itself becomes abundant?
 
 As a software developer, I'm in a profession that is often mentioned whenever AI enters the conversation. Every few weeks, a new prediction appears claiming that developers will soon be unnecessary. Yet my experience has been the opposite. The more capable AI becomes, the more I find myself focusing on the parts of software development that matter most: understanding people, solving business problems, making tradeoffs, and deciding what should be built in the first place.
 
 I don't believe the next decade will be defined by humans competing against AI; it will be about humans learning how to work alongside it. Demis Hassabis mentions AI as a tool for amplifying human capability rather than replacing it. The calculator didn't eliminate mathematicians. Search engines didn't eliminate researchers. New tools tend to shift our attention toward higher-value work.
 
-In software development, I can already see the early signs of this shift. Since January, I haven't written one line of code but have produced 10s of 1000s lines. What AI can't do is sit in a room (or Zoom) with stakeholders and uncover the real problem hidden behind the request. It's important to note: it can't take responsibility for a production issue; it can't easily balance competing priorities between project managers, clients, and team members. Those responsibilities remain human, and I suspect they will remain so for a while.
+In software development, I can already see the early signs of this shift. Since January, I haven't written one line of code. However, it can't take responsibility for production issues; it can't read between the lines of stakeholder requirements. Those responsibilities are human, and I suspect they will remain that way for a while.
 
 The same pattern extends beyond software. Doctors may spend less time treating symptoms and more time on prevention (nutrition and movement). Teachers may spend less time grading and more time teaching (and hopefully revamp their curriculum to match the times). Rather than replacing expertise, AI may increase and refine the reach of expertise.
 
