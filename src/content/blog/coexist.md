@@ -13,6 +13,10 @@ tags:
 draft: false
 ---
 
+<figure>
+  <img src="/images/blog/coexist.png" alt="coexist" />
+</figure>
+
 If you spend enough time doom-scrolling the AI blurbs, it starts to feel like we’re being presented with two competing stories about where this is all headed. In one, AI disruption pushes society toward guaranteed income models where survival does not depend on traditional work. In the other, the emphasis stays on expanding entrepreneurship so quickly that entirely new categories of work are created faster than old ones can fade away. Both are trying to answer the same underlying question in different ways: what happens when intelligence itself becomes abundant?
 
 As a software developer, I'm in a profession that is often mentioned whenever AI enters the conversation. Every few weeks, a new prediction appears claiming that developers will soon be unnecessary. Yet my experience has been the opposite. The more capable AI becomes, the more I find myself focusing on the parts of software development that matter most: understanding people, solving business problems, making tradeoffs, and deciding what should be built in the first place.
