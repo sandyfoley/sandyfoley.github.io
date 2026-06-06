@@ -9,8 +9,6 @@ audience:
 tags:
   - claude
   - certification
-  - python
-  - notebooks
 draft: false
 ---
 
@@ -37,6 +35,7 @@ The LLM model reasons and the hooks enforce rules.
 - A PreToolUse hook can validate arguments or block an unsafe operation with a non-zero exit code before the tool ever runs.
 - A PostToolUse hook can auto-format a file after every edit or trigger a linter without asking the model to remember to do it. 
 - A SessionStart hook can inject project context so every prompt begins from a consistent state.
+
 This introduces deterministic structure around probabilistic reasoning. 
 
 ## Subagents = Delegation
@@ -55,4 +54,5 @@ The biggest surprise was the collection of features. Each piece of architecture 
 - deterministic control
 - delegation
 - external integration
+
 This is what it feels like to build systems around intelligence rather than just access to it.
